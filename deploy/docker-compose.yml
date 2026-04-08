@@ -1,0 +1,22 @@
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: deploy/backend.Dockerfile
+    environment:
+      # 必填：用于调用 DeepSeek（生成大纲/生成模块等功能）
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      # 可选：默认就是 https://api.deepseek.com
+      - DEEPSEEK_BASE_URL=${DEEPSEEK_BASE_URL:-https://api.deepseek.com}
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/frontend.Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
